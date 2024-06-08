@@ -1,0 +1,56 @@
+#include<iostream>
+using namespace std;
+#include<stdlib.h>
+#include<math.h>
+#include<climits>
+float value(int i,int j,float v[][4]){
+if(i<0){
+return v[0][j];
+}else if (j<0){
+return v[i][0];
+}else if(i>3){
+return v[3][j];
+}else if(j>3){
+return v[i][3];
+}else{
+    return v[i][j];
+}
+}
+float bellman_v(int i, int j, float v[][4]){
+if((i==0 && j==0 )||(i==3 && j==3))
+return 0;
+return (value(i-1,j,v)+value(i,j-1,v)+value(i+1,j,v)+value(i,j+1,v))/4 -1;
+}
+int main(){
+float v[4][4];
+for (int i=0;i<4;i++){
+for(int j=0;j<4;j++){
+v[i][j]=0;
+}
+}
+float vdif=0;
+float new_v[4][4];
+while(true){
+for(int i=0;i<4;i++){
+for(int j=0;j<4;j++){
+new_v[i][j]= bellman_v(i,j,v);
+vdif= max(vdif,fabs(v[i][j]-new_v[i][j]));
+}
+}
+if(vdif<pow(10,-6))
+break;
+vdif=0;
+for(int i=0;i<4;i++){
+for(int j=0;j<4;j++){
+v[i][j]=new_v[i][j];
+}
+}
+}
+for (int i=0;i<4;i++){
+for(int j=0;j<4;j++){
+cout<<v[i][j]<<" ";
+}
+cout<<endl;
+}
+return 0;
+}
